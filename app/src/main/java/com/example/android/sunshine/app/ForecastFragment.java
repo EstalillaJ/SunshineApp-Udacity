@@ -27,12 +27,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by josh on 12/13/15.
  */
 public class ForecastFragment extends Fragment {
 
+        ArrayAdapter<String> mForecastAdapter;
         public ForecastFragment() {
         }
 
@@ -69,14 +72,14 @@ public class ForecastFragment extends Fragment {
             weeklyForecasts.add("Fri - Foggy - 70/46");
             weeklyForecasts.add("Sat - Sunny - 76/68");
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            mForecastAdapter = new ArrayAdapter<>(
                     getActivity(),
                     R.layout.list_item_forecast,
                     R.id.list_item_forecast_textview,
                     weeklyForecasts);
 
             ListView forecastListView = (ListView) rootView.findViewById(R.id.listview_forecast);
-            forecastListView.setAdapter(adapter);
+            forecastListView.setAdapter(mForecastAdapter);
 
             return rootView;
         }
@@ -166,9 +169,23 @@ public class ForecastFragment extends Fragment {
             return null;
         }
 
+        @Override
+        protected void onPostExecute(String[] strings) {
+
+            List<String> apiForecasts = Arrays.asList(strings);
+            mForecastAdapter.clear();
+
+            for (String s: apiForecasts)
+                mForecastAdapter.add(s);
+
+
+            mForecastAdapter.notifyDataSetChanged();
+
+        }
+
         /* The date/time conversion code is going to be moved outside the asynctask later,
-        * so for convenience we're breaking it out into its own method now.
-        */
+                * so for convenience we're breaking it out into its own method now.
+                */
         private String getReadableDateString(long time){
             // Because the API returns a unix timestamp (measured in seconds),
             // it must be converted to milliseconds in order to be converted to valid date.
