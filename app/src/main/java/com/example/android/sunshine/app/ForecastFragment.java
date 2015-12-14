@@ -172,15 +172,13 @@ public class ForecastFragment extends Fragment {
         @Override
         protected void onPostExecute(String[] strings) {
 
-            List<String> apiForecasts = Arrays.asList(strings);
-            mForecastAdapter.clear();
+            if (strings != null) {
+                List<String> apiForecasts = Arrays.asList(strings);
+                mForecastAdapter.clear();
 
-            for (String s: apiForecasts)
-                mForecastAdapter.add(s);
-
-
-            mForecastAdapter.notifyDataSetChanged();
-
+                for (String s : apiForecasts)
+                    mForecastAdapter.add(s);
+            }
         }
 
         /* The date/time conversion code is going to be moved outside the asynctask later,
@@ -275,9 +273,7 @@ public class ForecastFragment extends Fragment {
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
-            for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
-            }
+
             return resultStrs;
 
         }
