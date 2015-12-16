@@ -19,9 +19,12 @@ package com.example.android.sunshine.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +73,34 @@ public class DetailActivity extends ActionBarActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        Intent mShareIntent;
+
         public PlaceholderFragment() {
         }
+
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+            inflater.inflate(R.menu.detail_fragment, menu);
+
+            MenuItem item = menu.findItem(R.id.menu_item_share);
+            ShareActionProvider shareActionProvider =
+                    (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+            if (shareActionProvider != null)
+                shareActionProvider.setShareIntent(mShareIntent);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item){
+
+            int id = item.getItemId();
+            if (id == R.id.menu_item_share) {
+
+
+            }
+            return super.onOptionsItemSelected(item);
+        }
+
+
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +111,14 @@ public class DetailActivity extends ActionBarActivity {
             String forecast = intent.getStringExtra("forecast");
             TextView textView = (TextView) rootView.findViewById(R.id.detail_textview);
             textView.setText(forecast);
+
+
+            mShareIntent = new Intent(Intent.ACTION_SEND);
+            mShareIntent.setType("text/plain");
+            mShareIntent.putExtra(Intent.EXTRA_TEXT, forecast + " #SunshineApp");
+
+
+            setHasOptionsMenu(true);
             return rootView;
         }
     }
