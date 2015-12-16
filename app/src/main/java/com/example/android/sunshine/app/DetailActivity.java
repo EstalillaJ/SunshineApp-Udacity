@@ -79,7 +79,7 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-            inflater.inflate(R.menu.detail_fragment, menu);
+            inflater.inflate(R.menu.detailfragment, menu);
 
             MenuItem item = menu.findItem(R.id.menu_item_share);
             ShareActionProvider shareActionProvider =
