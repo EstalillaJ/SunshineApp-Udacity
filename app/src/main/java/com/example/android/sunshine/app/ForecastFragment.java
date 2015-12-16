@@ -93,10 +93,19 @@ public class ForecastFragment extends Fragment {
 
         public void updateWeather() {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            //gets metric or imperial based on user settings
+            String unitsKey = getString(R.string.pref_units_key);
+            String units = preferences.getString(unitsKey,"");
+            Log.v("______",units);
+            //gets zipcode based on user settings
             String locationKey = getString(R.string.pref_location_key);
             String defaultLocation = getString(R.string.pref_location_default);
             String zipCode = preferences.getString(locationKey,defaultLocation);
-            new FetchWeatherTask().execute(zipCode);
+
+
+
+            new FetchWeatherTask().execute(new String[] {zipCode,units});
         }
 
         @Override
@@ -108,7 +117,7 @@ public class ForecastFragment extends Fragment {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
-        protected String[] doInBackground(String... postcode) {
+        protected String[] doInBackground(String... weatherData) {
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -127,9 +136,9 @@ public class ForecastFragment extends Fragment {
 
                 Uri uri = Uri.parse(BASE_URL)
                         .buildUpon()
-                        .appendQueryParameter("q", postcode[0])
+                        .appendQueryParameter("q", weatherData[0])
                         .appendQueryParameter("mode", "json")
-                        .appendQueryParameter("units", "metric")
+                        .appendQueryParameter("units", weatherData[1])
                         .appendQueryParameter("cnt", "7")
                         .appendQueryParameter("APPID", BuildConfig.OPEN_WEATHER_MAP_API_KEY)
                         .build();
