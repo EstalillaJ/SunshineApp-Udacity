@@ -94,18 +94,12 @@ public class ForecastFragment extends Fragment {
         public void updateWeather() {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-            //gets metric or imperial based on user settings
-            String unitsKey = getString(R.string.pref_units_key);
-            String units = preferences.getString(unitsKey,"");
-            Log.v("______",units);
             //gets zipcode based on user settings
             String locationKey = getString(R.string.pref_location_key);
             String defaultLocation = getString(R.string.pref_location_default);
             String zipCode = preferences.getString(locationKey,defaultLocation);
 
-
-
-            new FetchWeatherTask().execute(new String[] {zipCode,units});
+            new FetchWeatherTask().execute(zipCode);
         }
 
         @Override
@@ -117,7 +111,7 @@ public class ForecastFragment extends Fragment {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
-        protected String[] doInBackground(String... weatherData) {
+        protected String[] doInBackground(String... postcode) {
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -136,9 +130,9 @@ public class ForecastFragment extends Fragment {
 
                 Uri uri = Uri.parse(BASE_URL)
                         .buildUpon()
-                        .appendQueryParameter("q", weatherData[0])
+                        .appendQueryParameter("q", postcode[0])
                         .appendQueryParameter("mode", "json")
-                        .appendQueryParameter("units", weatherData[1])
+                        .appendQueryParameter("units", "metric")
                         .appendQueryParameter("cnt", "7")
                         .appendQueryParameter("APPID", BuildConfig.OPEN_WEATHER_MAP_API_KEY)
                         .build();
@@ -227,6 +221,7 @@ public class ForecastFragment extends Fragment {
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
+
             String highLowStr = roundedHigh + "/" + roundedLow;
             return highLowStr;
         }
@@ -297,6 +292,14 @@ public class ForecastFragment extends Fragment {
                 double high = temperatureObject.getDouble(OWM_MAX);
                 double low = temperatureObject.getDouble(OWM_MIN);
 
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+                if (preferences.getString(getString(R.string.pref_units_key),"").equals("imperial")){
+                    high = convertToImperial(high);
+                    low = convertToImperial(low);
+                }
+
+
                 highAndLow = formatHighLows(high, low);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
@@ -304,6 +307,10 @@ public class ForecastFragment extends Fragment {
 
             return resultStrs;
 
+        }
+
+        public double convertToImperial(double metric){
+            return (metric)*(9.0/5.0)+32;
         }
     }
 }
