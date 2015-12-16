@@ -1,10 +1,14 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -35,15 +39,45 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
+        Intent intent;
+        switch (id) {
+            case R.id.action_settings:
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_view_location:
+                showMap();
+                return true;
         }
+            return super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
     }
 
+    public void showMap() {
 
+        SharedPreferences preferences = PreferenceManager.
+                getDefaultSharedPreferences(getApplicationContext());
+        String zipCode = preferences.getString(getString(R.string.pref_location_key),"");
+
+        //building the uri for the intent. see Common Intents
+        Uri geoLocation = Uri.parse("geo:0,0?")
+                .buildUpon()
+                .appendQueryParameter("q",zipCode)
+                .build();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+
+        //If the data we gave to the intent makes sense, start the activity
+        if (intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        }
+        else {
+            Toast toast = new Toast(getApplicationContext());
+            toast.setText("Oops, either you don't have a map application, or it cannot" +
+                    " resolve your location.");
+            toast.show();
+        }
+    }
 
 }
