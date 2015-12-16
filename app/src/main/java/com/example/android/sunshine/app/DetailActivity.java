@@ -112,7 +112,7 @@ public class DetailActivity extends ActionBarActivity {
             TextView textView = (TextView) rootView.findViewById(R.id.detail_textview);
             textView.setText(forecast);
 
-
+            mShareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
             mShareIntent = new Intent(Intent.ACTION_SEND);
             mShareIntent.setType("text/plain");
             mShareIntent.putExtra(Intent.EXTRA_TEXT, forecast + " #SunshineApp");
