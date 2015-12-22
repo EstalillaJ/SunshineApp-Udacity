@@ -6,12 +6,46 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v("_________", "In the Start Method");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.v("_________", "In the Pause Method");
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v("_________", "In the Destroy Method");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.v("_________", "In the Stop Method");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v("_________", "In the Resume Method");
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new ForecastFragment())
                     .commit();
         }
+        Log.v("_________", "In the Create Method");
     }
 
     @Override
