@@ -129,6 +129,8 @@ public class TestDb extends AndroidTestCase {
         //null an any field of the query essentially means return all or do the default
         // table, columns, selection, selectionArgs, groupBy, having, orderBy
         Cursor cursor = db.query(WeatherContract.LocationEntry.TABLE_NAME,
+                //passing null for this array would have done the same thing, since i
+                //specified all the colummns
                 new String[] {WeatherContract.LocationEntry.COLUMN_CITY_NAME,
                               WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
                               WeatherContract.LocationEntry.COLUMN_COORD_LONG,
