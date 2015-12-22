@@ -59,6 +59,7 @@ public class TestUtilities extends AndroidTestCase {
         weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WIND_SPEED, 5.5);
         weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, 321);
 
+
         return weatherValues;
     }
 
