@@ -126,6 +126,8 @@ public class TestDb extends AndroidTestCase {
 
         assertTrue("The location row was not inserted properly", row > -1);
         // Query the database and receive a Cursor back
+        //null an any field of the query essentially means return all or do the default
+        // table, columns, selection, selectionArgs, groupBy, having, orderBy
         Cursor cursor = db.query(WeatherContract.LocationEntry.TABLE_NAME,
                 new String[] {WeatherContract.LocationEntry.COLUMN_CITY_NAME,
                               WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
