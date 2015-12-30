@@ -242,7 +242,6 @@ public class WeatherProvider extends ContentProvider {
                 break;
             }
             case LOCATION: {
-                normalizeDate(values);
                 long _id = db.insert(WeatherContract.LocationEntry.TABLE_NAME,null,values);
                 if (_id > 0)
                     returnUri = WeatherContract.LocationEntry.buildLocationUri(_id);
@@ -271,7 +270,8 @@ public class WeatherProvider extends ContentProvider {
         // is null.
         // Oh, and you should notify the listeners here.
         int rowsDeleted;
-
+        if (null == selection)
+            selection = "1";
 
         switch (match){
             case WEATHER: {
@@ -287,7 +287,7 @@ public class WeatherProvider extends ContentProvider {
 
         }
         // Student: return the actual rows deleted
-        if (rowsDeleted != 0 || selection == null)
+        if (rowsDeleted != 0 )
             getContext().getContentResolver().notifyChange(uri, null);
 
         return rowsDeleted;
@@ -323,7 +323,6 @@ public class WeatherProvider extends ContentProvider {
                 break;
             }
             case LOCATION: {
-                normalizeDate(values);
                 rowsUpdated = db.update(WeatherContract.LocationEntry.TABLE_NAME,values,selection,selectionArgs);
                 break;
             }
